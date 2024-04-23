@@ -49,3 +49,18 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1q2w3e4r
       - POSTGRES_DB=ordersdb
+
+  payments-ms:
+    build: ./payments-ms
+    volumes:
+      - ./payments-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    ports:
+      - 3003:3003
+    environment:
+      - PORT=${PAYMENTS_MS_PORT}
+      - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
+      - STRIPE_SUCCESS_URL=${STRIPE_SUCCESS_URL}
+      - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
+      - STRIPE_SECRET=${STRIPE_SECRET}
+      - NATS_SERVERS=nats://nats-server:4222
