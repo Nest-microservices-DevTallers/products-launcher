@@ -64,3 +64,29 @@ services:
       - STRIPE_CANCEL_URL=${STRIPE_CANCEL_URL}
       - STRIPE_SECRET=${STRIPE_SECRET}
       - NATS_SERVERS=nats://nats-server:4222
+
+  auth-ms:
+    # depends_on:
+    #   - auth-db
+    build: ./auth-ms
+    volumes:
+      - ./auth-ms/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3003
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${MONGO_URL}
+      # - DATABASE_URL=mongodb://127.0.0.1:27017/auth?authSource=admin # local
+      - JWT_SECRET=${JWT_SECRET}
+
+  # auth-db:
+  #   build:
+  #     context: ./auth-ms/mongodb
+  #     args:
+  #       MONGO_VERSION: 6
+  #   environment:
+  #     MONGO_REPLICA_HOST: 127.0.0.1
+  #     MONGO_REPLICA_PORT: 27017
+  #     MONGO_COMMAND: 'mongosh'
+  #   ports:
+  #     - 27017:27017
